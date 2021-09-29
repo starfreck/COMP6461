@@ -1,0 +1,6 @@
+1. GET operation
+2. POST operation
+3. Query parameters
+4. Request headers
+5. Body of the request
+
