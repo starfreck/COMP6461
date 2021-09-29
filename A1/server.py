@@ -2,6 +2,8 @@ import socket
 import threading
 import argparse
 
+from http_lib import http
+
 
 def run_server(host, port):
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -23,15 +25,21 @@ def handle_client(conn, addr):
     try:
         while True:
             data = conn.recv(1024)
-            print(type(data))
-            print(data.decode("utf-8"))
+            #print(type(data))
+            print(data.decode('utf-8'))
 
-            http_response = """\
-            HTTP/1.1 200 OK
+            req = http(data)
 
-            Hello, World!
-            """.encode('utf-8')
+            http_response = b"""HTTP/1.1 200 OK\r\n
+Date: Mon, 27 Jul 2009 12:28:53 GMT\r\n
+Server: Apache/2.2.14 (Win32)\r\n
+Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT\r\n
+Content-Length: 88\r\n
+Content-Type: text/html\r\n
+Connection: Closed\r\n"""
+
             conn.sendall(http_response)
+            conn.close()
             # if not data:
             #     break
             # conn.sendall(data)

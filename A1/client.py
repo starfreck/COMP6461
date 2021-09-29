@@ -2,7 +2,6 @@ import socket
 import argparse
 import sys
 
-
 def run_client(host, port):
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -14,7 +13,7 @@ def run_client(host, port):
             conn.sendall(request)
             # MSG_WAITALL waits for full request or error
             response = conn.recv(len(request), socket.MSG_WAITALL)
-            sys.stdout.write("Replied: " + response.decode("utf-8"))
+            print("Replied:",response.decode("utf-8"))
     finally:
         conn.close()
 

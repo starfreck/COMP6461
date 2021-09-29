@@ -4,13 +4,16 @@ class http:
     parameters = dict()
 
 
-    def __init__(self, headers, parameters, body):
-        self.body = body
-        self.headers = headers
-        self.parameters = parameters
+    def __init__(self, request):
+        # Parse request
+        # request
+        # self.body = body
+        # self.headers = headers
+        # self.parameters = parameters
+        pass
 
     def http_get(self):
-
+        pass
 
     def http_post(self):
         pass
