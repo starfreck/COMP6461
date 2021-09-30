@@ -2,8 +2,6 @@ import socket
 import threading
 import argparse
 
-from http_lib import http
-
 FORMAT = 'utf-8'
 
 

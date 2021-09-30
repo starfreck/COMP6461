@@ -7,6 +7,9 @@ FORMAT = 'utf-8'
 
 def run_client(host, port):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #  This allows the address/port to be reused immediately instead of
+    #  it being stuck in the TIME_WAIT state for several minutes, waiting for late packets to arrive.
+    client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         client.connect((host, port))
         print("Type any thing then ENTER. Press Ctrl+C to terminate")
