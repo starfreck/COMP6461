@@ -1,7 +1,7 @@
 import sys
 from http_lib import httpclient
 
-Debug = True
+Debug = False
 
 
 def main(argv):
@@ -84,3 +84,4 @@ def post_handler(argv):
 if __name__ == "__main__":
     sys.argv = sys.argv[1:]
     main(sys.argv)
+
