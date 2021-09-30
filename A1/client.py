@@ -2,20 +2,23 @@ import socket
 import argparse
 import sys
 
+FORMAT = 'utf-8'
+
+
 def run_client(host, port):
-    conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        conn.connect((host, port))
+        client.connect((host, port))
         print("Type any thing then ENTER. Press Ctrl+C to terminate")
         while True:
             line = sys.stdin.readline(1024)
-            request = line.encode("utf-8")
-            conn.sendall(request)
+            request = line.encode(FORMAT)
+            client.sendall(request)
             # MSG_WAITALL waits for full request or error
-            response = conn.recv(len(request), socket.MSG_WAITALL)
-            print("Replied:",response.decode("utf-8"))
+            response = client.recv(len(request), socket.MSG_WAITALL)
+            print("Replied:", response.decode(FORMAT))
     finally:
-        conn.close()
+        client.close()
 
 
 # Usage: python echoclient.py --host host --port port
