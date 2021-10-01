@@ -1,5 +1,6 @@
 import json
 import socket
+from env import Debug
 from urllib.parse import urlparse
 
 class httpclient:
@@ -94,7 +95,8 @@ class httpclient:
         if self.file is not None:
             request += self.file
 
-        print(request)
+        # Print Request
+        if Debug: print("Request:\n",request,"\n")
 
         # Pass this data to TCP Client
         self.run_client(request)
@@ -112,9 +114,14 @@ class httpclient:
             response = client.recv(self.BUFFER_SIZE)
             response = response.decode(self.FORMAT)
             response = response.split("\r\n\r\n")
-            if self.verbose:
-                print(response[0].strip(),"\n")
-            print(response[1].strip())
+            # Check Response
+            if len(response) >=2:
+                if self.verbose:
+                    print(response[0].strip(),"\n")
+                print(response[1].strip())
+            else:
+                if Debug: print("Response:\n",response,"\n")
+                print("Oops! Something went wrong ;(")
         finally:
             client.close()
 

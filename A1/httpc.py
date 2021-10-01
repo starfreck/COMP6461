@@ -1,7 +1,7 @@
+#! /usr/bin/python3
 import sys
+from env import Debug
 from http_lib import httpclient
-
-Debug = True
 
 
 def main(argv):
@@ -21,6 +21,10 @@ def main(argv):
     Use \"httpc help [command]\" for more information about a command."""
 
         print(help_info)
+
+    if len(argv) == 1 and argv[0] == "info":
+        info = "Develped by:\n@starfreck (https://github.com/starfreck)\n@ninanee (https://github.com/ninanee)"
+        print(info)
 
     elif len(argv) == 2 and argv[0] == "help" and argv[1] == "get":
         get_info = """\nUsage:
@@ -53,7 +57,19 @@ def main(argv):
     elif len(argv) > 1 and argv[0] == "post":
         post_handler(argv[1:])
     else:
+        default_info = """
+                   ____         _     _   _              
+                  / __ \       | |   | | | |             
+                 | |  | |______| |__ | |_| |_ _ __   ___ 
+                 | |  | |______| '_ \| __| __| '_ \ / __|
+                 | |__| |      | | | | |_| |_| |_) | (__ 
+                  \___\_\      |_| |_|\__|\__| .__/ \___|
+                                             | |         
+                                             |_|         
+                """
+        print(default_info)
         print("Invalid choice. Please try again!")
+        print('Usage:\n\thttpc (get|post) [-v] (-h "k:v")* [-d inline-data] [-f file] URL')
 
 
 def get_handler(argv):
@@ -73,7 +89,7 @@ def get_handler(argv):
         argv.remove(headers)
 
     if len(argv) >= 1:
-        if Debug: print("Debug---->","verbose:", verbose,"headers:", headers, "url:",argv[0])
+        if Debug: print("\nverbose:", verbose,"headers:", headers, "url:",argv[0],"\n")
         # Call GET Method
         httpclient(verbose=verbose, headers=headers, url=argv[0]).get()
     else:
@@ -92,7 +108,6 @@ def post_handler(argv):
         print("Either [-d] or [-f] can be used but not both.")
         return
     else:
-        print(argv)
         # Process verbose
         if "-v" in argv:
             argv.remove("-v")
@@ -117,7 +132,7 @@ def post_handler(argv):
             argv.remove(file)
 
         if len(argv) >= 1:
-            if Debug: print("Debug---->", "verbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string,"file:", file)
+            if Debug: print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string,"file:", file,"\n")
             # Call POST Method
             httpclient(verbose=verbose, headers=headers, url=argv[0],string=string,file=file).post()
         else:
@@ -130,6 +145,9 @@ def filter_args(argv):
             argv[index] = arg.replace("--", "-")
     return argv
 
+def text_link(text,target):
+    # https://stackoverflow.com/questions/44078888/clickable-html-links-in-python-3-6-shell
+    return (f"\u001b]8;;{target}\u001b\\{text}\u001b]8;;\u001b\\")
 if __name__ == "__main__":
     sys.argv = sys.argv[1:]
     argv = filter_args(sys.argv)
