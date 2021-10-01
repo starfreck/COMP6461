@@ -1,26 +1,18 @@
-##GET Testing
-####1. GET with query parameters
+# Requirements
+1. Python 3+
 
-```python3 httpc.py get 'http://httpbin.org/get?course=networking&assignment=1'``` 
+# Run echo server
 
-```python3 httpc.py get 'http://httpbin.org/get?course=networking&assignment=1' -v``` 
+`python echoserver.py --port 8007`
 
-####2. GET with headers
+# Run echo client
 
-```python3 httpc.py get -h 'Authorization:Basic YWxhZGRpbjpvcGVuc2VzYW1l' 'http://httpbin.org/get?course=networking&assignment=1'``` 
+`python echoclient.py --host localhost --port 8007`
 
-```python3 httpc.py get -v -h 'Authorization:Basic YWxhZGRpbjpvcGVuc2VzYW1l' 'http://httpbin.org/get?course=networking&assignment=1'``` 
+# Run time server
 
-## POST Testing 
+`python timeserver.py --port 8037`
 
-####1. POST with inline data [--d] or [-d]
+# Run time client
 
-```python3 httpc.py post -h Content-Type:application/js --d '{"Assignment": 1}' 'http://httpbin.org/post'``` 
-
-```python3 httpc.py post -h Content-Type:application/js --d '{"Assignment": 1}' 'http://httpbin.org/post' -v``` 
-
-####2. POST with File [--f] or [-f] (Enter full path of file)
-
-```python3 httpc.py post  http://httpbin.org/post --f 'post.json'``` 
-
-```python3 httpc.py post  http://httpbin.org/post --f 'post.json' -v``` 
+`python timeclient.py --host localhost --port 8037`
