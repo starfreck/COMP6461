@@ -89,11 +89,13 @@ def get_handler(argv):
         argv.remove(headers)
 
     if len(argv) >= 1:
-        if Debug: print("\nverbose:", verbose,"headers:", headers, "url:",argv[0],"\n")
+        if Debug:
+            print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "\n")
         # Call GET Method
         httpclient(verbose=verbose, headers=headers, url=argv[0]).get()
     else:
         print("Invalid choice. Please try again!")
+
 
 def post_handler(argv):
     """POST request handler"""
@@ -132,24 +134,29 @@ def post_handler(argv):
             argv.remove(file)
 
         if len(argv) >= 1:
-            if Debug: print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string,"file:", file,"\n")
+            if Debug: print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string, "file:",
+                            file, "\n")
             # Call POST Method
-            httpclient(verbose=verbose, headers=headers, url=argv[0],string=string,file=file).post()
+            httpclient(verbose=verbose, headers=headers, url=argv[0], string=string, file=file).post()
         else:
             print("Invalid choice. Please try again!")
 
+
 def filter_args(argv):
+    """handle users wrong cmd input"""
     for arg in argv:
         if len(arg) == 3 and "--" in arg:
             index = argv.index(arg)
             argv[index] = arg.replace("--", "-")
     return argv
 
-def text_link(text,target):
+
+def text_link(text, target):
     # https://stackoverflow.com/questions/44078888/clickable-html-links-in-python-3-6-shell
-    return (f"\u001b]8;;{target}\u001b\\{text}\u001b]8;;\u001b\\")
+    return f"\u001b]8;;{target}\u001b\\{text}\u001b]8;;\u001b\\"
+
+
 if __name__ == "__main__":
     sys.argv = sys.argv[1:]
     argv = filter_args(sys.argv)
     main(argv)
-

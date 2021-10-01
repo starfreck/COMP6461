@@ -3,6 +3,7 @@ import socket
 from env import Debug
 from urllib.parse import urlparse
 
+
 class httpclient:
     """This is the http class for client side operations"""
     port = 80
@@ -22,29 +23,34 @@ class httpclient:
         # Extra Params for POST
         self.string = string
         self.file = file
-        #self.parsed_url.hostname
+        # self.parsed_url.hostname
 
     def is_json_data(self):
         if self.headers is not None and "application/json" in self.headers:
             return True
         return False
 
-    def to_json(self,string):
+    def to_json(self, string):
         return json.dumps(json.loads(string))
 
     def get(self):
         """ Build GET and send to host"""
         request = ""
-        request += "GET "+self.path+"?"+self.query+" HTTP/1.1\r\n"
-        request += "Host: "+self.host+"\r\n"
+        request += "GET " + self.path + "?" + self.query + " HTTP/1.1\r\n"
+        request += "Host: " + self.host + "\r\n"
         request += "User-Agent: Concordia-HTTP/1.0\r\n"
         if self.headers is not None:
-            #for header in self.headers:    # Activate this for Multiple Headers
+            # for header in self.headers:    # Activate this for Multiple Headers
             #    request += header+"\r\n"
-            request += self.headers+"\r\n"  # Activate this for Single Header
+            request += self.headers + "\r\n"  # Activate this for Single Header
         # Ending of the request or body
         request += "\r\n"
         # Pass this data to TCP Client
+
+        # Show the GET request
+        print("""-----------------------GET REQUEST------------------------""")
+        print(request)
+        print("""-------------------------RESPONSE------------------------""")
         self.run_client(request)
 
     def post(self):
@@ -57,15 +63,15 @@ class httpclient:
 
         # Start Building our POST request
         request = ""
-        request += "POST "+self.path+"?"+self.query+" HTTP/1.1\r\n"
-        request += "Host: "+self.host+"\r\n"
+        request += "POST " + self.path + "?" + self.query + " HTTP/1.1\r\n"
+        request += "Host: " + self.host + "\r\n"
         request += "User-Agent: Concordia-HTTP/1.0\r\n"
 
         # Add Headers
         if self.headers is not None:
-            #for header in self.headers:    # Activate this for Multiple Headers
+            # for header in self.headers:    # Activate this for Multiple Headers
             #    request += header+"\r\n"
-            request += self.headers+"\r\n"  # Activate this for Single Header
+            request += self.headers + "\r\n"  # Activate this for Single Header
 
         # Load file as string in self.file if file is present
         if self.file is not None:
@@ -82,7 +88,7 @@ class httpclient:
 
         # Add Content-Length in Header
         if self.string is not None:
-            request += "Content-Length: "+ str(len(self.string)) + "\r\n"
+            request += "Content-Length: " + str(len(self.string)) + "\r\n"
         if self.file is not None:
             request += "Content-Length: " + str(len(self.file)) + "\r\n"
 
@@ -95,13 +101,17 @@ class httpclient:
         if self.file is not None:
             request += self.file
 
+        # Show the post request
+        print("""-----------------------POST REQUEST------------------------""")
+        print(request)
+        print("""-------------------------RESPONSE------------------------""")
         # Print Request
-        if Debug: print("Request:\n",request,"\n")
+        if Debug: print("Request:\n", request, "\n")
 
         # Pass this data to TCP Client
         self.run_client(request)
 
-    def run_client(self,request):
+    def run_client(self, request):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #  This allows the address/port to be reused immediately instead of
         #  it being stuck in the TIME_WAIT state for several minutes, waiting for late packets to arrive.
@@ -115,14 +125,13 @@ class httpclient:
             response = response.decode(self.FORMAT)
             response = response.split("\r\n\r\n")
             # Check Response
-            if len(response) >=2:
+            if len(response) >= 2:
                 if self.verbose:
-                    print(response[0].strip(),"\n")
+                    print(response[0].strip(), "\n")
                 print(response[1].strip())
             else:
-                if Debug: print("Response:\n",response,"\n")
+                if Debug:
+                    print("Response:\n", response, "\n")
                 print("Oops! Something went wrong ;(")
         finally:
             client.close()
-
-
