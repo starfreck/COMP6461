@@ -1,8 +1,7 @@
 #! /usr/bin/python3
 import sys
-from env import Debug
+from env import Debug, Q_HTTP
 from http_lib import httpclient
-
 
 def main(argv):
     """The Entry Point of httpc"""
@@ -57,16 +56,7 @@ def main(argv):
     elif len(argv) > 1 and argv[0] == "post":
         post_handler(argv[1:])
     else:
-        default_info = """
-                   ____         _     _   _              
-                  / __ \       | |   | | | |             
-                 | |  | |______| |__ | |_| |_ _ __   ___ 
-                 | |  | |______| '_ \| __| __| '_ \ / __|
-                 | |__| |      | | | | |_| |_| |_) | (__ 
-                  \___\_\      |_| |_|\__|\__| .__/ \___|
-                                             | |         
-                                             |_|         
-                """
+        default_info = Q_HTTP
         print(default_info)
         print("Invalid choice. Please try again!")
         print('Usage:\n\thttpc (get|post) [-v] (-h "k:v")* [-d inline-data] [-f file] URL')
