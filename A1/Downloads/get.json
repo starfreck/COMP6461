@@ -6,9 +6,10 @@
   "headers": {
     "Authorization": "Basic YWxhZGRpbjpvcGVuc2VzYW1l", 
     "Host": "httpbin.org", 
+    "Name": "Vasu", 
     "User-Agent": "Concordia-HTTP/1.0", 
-    "X-Amzn-Trace-Id": "Root=1-615e7af1-60ddb9d14b482ee25cf2b50f"
+    "X-Amzn-Trace-Id": "Root=1-615f5f1c-17ef8941296943d224bc2d5e"
   }, 
-  "origin": "142.184.63.86", 
+  "origin": "132.205.229.105", 
   "url": "http://httpbin.org/get?course=networking&assignment=1"
 }

@@ -17,12 +17,14 @@ class httpclient:
     FORMAT = 'utf-8'
     BUFFER_SIZE = 102400
     is_get = is_post = None
-    def __init__(self, verbose, headers, url, string=None, file=None, output_file=None):
+
+    def __init__(self, verbose, headers, url, string=None, file=None, output_file=None, redirection=False):
         """Init required params"""
         self.verbose = verbose
+        self.redirection = redirection
         self.headers = headers
         # Define URL Vars
-        self.parsed_url = self.host = self.path =  self.query = None
+        self.parsed_url = self.host = self.path = self.query = None
         # Parse URL
         self.parse_url(url)
         # Extra Params for POST
@@ -31,7 +33,7 @@ class httpclient:
         self.output_file = output_file
         # self.parsed_url.hostname
 
-    def parse_url(self,url):
+    def parse_url(self, url):
         self.parsed_url = urlparse(url)
         self.host = self.parsed_url.netloc
         self.path = self.parsed_url.path
@@ -50,17 +52,17 @@ class httpclient:
     def save_as_file(self, response):
         if not os.path.isdir("./Downloads/"):
             os.makedirs("./Downloads/")
-        with open("./Downloads/"+self.output_file, 'w') as file:
+        with open("./Downloads/" + self.output_file, 'w') as file:
             file.write(response)
 
-    def is_redirect(self,response):
+    def is_redirect(self, response):
         header_lines = response[0].split("\r\n")
         code = str(header_lines[0].split()[1])
         if code.startswith("3"):
             return True
         return False
 
-    def redirect(self,response):
+    def redirect(self, response):
         header_lines = response[0].split("\r\n")
         location = "Location: "
         for line in header_lines:
@@ -68,7 +70,7 @@ class httpclient:
                 index = line.find(location) + len(location)
                 new_url = line[index:]
                 if Debug: print("""--------------------------------------------------------""")
-                if Debug: print("Redirections Detected:",new_url)
+                if Debug: print("Redirections Detected:", new_url)
                 if Debug: print("""--------------------------------------------------------""")
                 self.parse_url(new_url)
                 break
@@ -84,9 +86,9 @@ class httpclient:
         request += "Host: " + self.host + "\r\n"
         request += "User-Agent: Concordia-HTTP/1.0\r\n"
         if self.headers is not None:
-            # for header in self.headers:    # Activate this for Multiple Headers
-            #    request += header+"\r\n"
-            request += self.headers + "\r\n"  # Activate this for Single Header
+            for header in self.headers:  # Multiple Headers
+                request += str(header).strip() + "\r\n"
+
         # Ending of the request or body
         request += "\r\n"
         # Pass this data to TCP Client
@@ -116,9 +118,8 @@ class httpclient:
 
         # Add Headers
         if self.headers is not None:
-            # for header in self.headers:    # Activate this for Multiple Headers
-            #    request += header+"\r\n"
-            request += self.headers + "\r\n"  # Activate this for Single Header
+            for header in self.headers:  # Multiple Headers
+                request += str(header).strip() + "\r\n"
 
         # Load file as string in self.file if file is present
         if self.file is not None:
@@ -168,15 +169,14 @@ class httpclient:
             client.sendall(request)
             # MSG_WAITALL waits for full request or error
             response = client.recv(self.BUFFER_SIZE)
-            
+
             response = response.decode(self.FORMAT)
             response = response.split("\r\n\r\n")
 
             # Check Response
             if len(response) >= 2:
-                if self.is_redirect(response):
+                if self.is_redirect(response) and self.redirection:
                     self.redirect(response)
-                    return
                 else:
                     if self.verbose:
                         print(response[0].strip(), "\n")

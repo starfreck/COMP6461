@@ -20,9 +20,15 @@
 
 #### 4. GET with Redirection
 
-```python3 httpc.py get  "http://httpbin.org/redirect/330"``` 
+```python3 httpc.py get  -r "http://localhost/redirect/330"``` 
 
-```python3 httpc.py get -v "http://httpbin.org/absolute-redirect/330""```
+```python3 httpc.py get -v "http://localhost/absolute-redirect/330 -r""```
+
+#### 5. Multiple Header Support [-h]*
+
+Note: You have to separate each header via comma ',' and Quote all headers together.
+
+```python3 httpc.py get -h 'Authorization:Basic YWxhZGRpbjpvcGVuc2VzYW1l,Name: Vasu' 'http://httpbin.org/get?course=networking&assignment=1' -v -o get.json``` 
 
 ## POST Testing 
 

@@ -66,6 +66,7 @@ def get_handler(argv):
     """GET request handler"""
     headers = None
     verbose = False
+    redirect = False
     output_file = None
 
     # Process verbose
@@ -78,6 +79,11 @@ def get_handler(argv):
         argv.remove("-h")
         headers = argv[location]
         argv.remove(headers)
+        headers = headers.split(",")
+    # Process Redirection
+    if "-r" in argv:
+        argv.remove("-r")
+        redirect = True
     # Process output file
     if "-o" in argv:
         location = argv.index("-o")
@@ -89,7 +95,7 @@ def get_handler(argv):
         if Debug:
             print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "\n")
         # Call GET Method
-        httpclient(verbose=verbose, headers=headers, url=argv[0], output_file=output_file).get()
+        httpclient(verbose=verbose, headers=headers, url=argv[0], output_file=output_file, redirection=redirect).get()
     else:
         print("Invalid choice. Please try again!")
 
@@ -101,6 +107,7 @@ def post_handler(argv):
     string = None
     headers = None
     verbose = False
+    redirect = False
     output_file = None
 
     # Check if string and file are specified together
@@ -118,6 +125,11 @@ def post_handler(argv):
             argv.remove("-h")
             headers = argv[location]
             argv.remove(headers)
+            headers = headers.split(",")
+        # Process Redirection
+        if "-r" in argv:
+            argv.remove("-r")
+            redirect = True
         # Process string
         if "-d" in argv:
             location = argv.index("-d")
@@ -140,7 +152,7 @@ def post_handler(argv):
             if Debug: print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string, "file:",
                             file, "\n")
             # Call POST Method
-            httpclient(verbose=verbose, headers=headers, url=argv[0], string=string, file=file, output_file=output_file).post()
+            httpclient(verbose=verbose, headers=headers, url=argv[0], string=string, file=file, output_file=output_file, redirection=redirect).post()
         else:
             print("Invalid choice. Please try again!")
 
