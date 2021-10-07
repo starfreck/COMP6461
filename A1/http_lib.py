@@ -5,27 +5,39 @@ from env import Debug
 from urllib.parse import urlparse
 
 
+# It supports 330 Redirections due to Recursion Stack
+# import sys
+# print(sys.getrecursionlimit())
+# sys.setrecursionlimit(1500)
+# print(sys.getrecursionlimit())
+
 class httpclient:
     """This is the http class for client side operations"""
     port = 80
     FORMAT = 'utf-8'
     BUFFER_SIZE = 102400
-
+    is_get = is_post = None
     def __init__(self, verbose, headers, url, string=None, file=None, output_file=None):
         """Init required params"""
-        self.parsed_url = urlparse(url)
         self.verbose = verbose
         self.headers = headers
-        self.host = self.parsed_url.netloc
-        self.path = self.parsed_url.path
-        self.query = self.parsed_url.query
-        if self.parsed_url.port is not None:
-            self.port = self.parsed_url.port
+        # Define URL Vars
+        self.parsed_url = self.host = self.path =  self.query = None
+        # Parse URL
+        self.parse_url(url)
         # Extra Params for POST
         self.string = string
         self.file = file
         self.output_file = output_file
         # self.parsed_url.hostname
+
+    def parse_url(self,url):
+        self.parsed_url = urlparse(url)
+        self.host = self.parsed_url.netloc
+        self.path = self.parsed_url.path
+        self.query = self.parsed_url.query
+        if self.parsed_url.port is not None:
+            self.port = self.parsed_url.port
 
     def is_json_data(self):
         if self.headers is not None and "application/json" in self.headers:
@@ -40,6 +52,30 @@ class httpclient:
             os.makedirs("./Downloads/")
         with open("./Downloads/"+self.output_file, 'w') as file:
             file.write(response)
+
+    def is_redirect(self,response):
+        header_lines = response[0].split("\r\n")
+        code = str(header_lines[0].split()[1])
+        if code.startswith("3"):
+            return True
+        return False
+
+    def redirect(self,response):
+        header_lines = response[0].split("\r\n")
+        location = "Location: "
+        for line in header_lines:
+            if location in line:
+                index = line.find(location) + len(location)
+                new_url = line[index:]
+                if Debug: print("""--------------------------------------------------------""")
+                if Debug: print("Redirections Detected:",new_url)
+                if Debug: print("""--------------------------------------------------------""")
+                self.parse_url(new_url)
+                break
+        if self.is_get:
+            self.get()
+        if self.is_post:
+            self.port()
 
     def get(self):
         """ Build GET and send to host"""
@@ -61,6 +97,7 @@ class httpclient:
         if Debug: print("""-------------------------RESPONSE------------------------""")
 
         # Pass this data to TCP Client
+        self.is_get = True
         self.run_client(request)
 
     def post(self):
@@ -116,6 +153,7 @@ class httpclient:
         if Debug: print(request)
         if Debug: print("""-------------------------RESPONSE------------------------""")
 
+        self.is_post = True
         # Pass this data to TCP Client
         self.run_client(request)
 
@@ -130,15 +168,21 @@ class httpclient:
             client.sendall(request)
             # MSG_WAITALL waits for full request or error
             response = client.recv(self.BUFFER_SIZE)
+            
             response = response.decode(self.FORMAT)
             response = response.split("\r\n\r\n")
+
             # Check Response
             if len(response) >= 2:
-                if self.verbose:
-                    print(response[0].strip(), "\n")
-                print(response[1].strip())
-                if self.output_file is not None:
-                    self.save_as_file(response[1].strip())
+                if self.is_redirect(response):
+                    self.redirect(response)
+                    return
+                else:
+                    if self.verbose:
+                        print(response[0].strip(), "\n")
+                    print(response[1].strip())
+                    if self.output_file is not None:
+                        self.save_as_file(response[1].strip())
             else:
                 if Debug:
                     print("Response:\n", response, "\n")

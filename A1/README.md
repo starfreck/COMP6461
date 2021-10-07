@@ -18,6 +18,11 @@
 
 ```python3 httpc.py get -o teapot.txt "http://httpbin.org/status/418"``` 
 
+#### 4. GET with Redirection
+
+```python3 httpc.py get  "http://httpbin.org/redirect/330"``` 
+
+```python3 httpc.py get -v "http://httpbin.org/absolute-redirect/330""```
 
 ## POST Testing 
 
