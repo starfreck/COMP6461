@@ -78,6 +78,10 @@ def get_handler(argv):
         headers = argv[location]
         argv.remove(headers)
 
+    if '-o' in argv:
+        o_index = argv.index('-o')
+        o_path = argv[o_index + 1]
+
     if len(argv) >= 1:
         if Debug:
             print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "\n")
@@ -122,6 +126,10 @@ def post_handler(argv):
             argv.remove("-f")
             file = argv[location]
             argv.remove(file)
+
+        if '-o' in argv:
+            o_index = argv.index('-o')
+            o_path = argv[o_index + 1]
 
         if len(argv) >= 1:
             if Debug: print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string, "file:",

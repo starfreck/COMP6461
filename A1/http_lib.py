@@ -10,7 +10,7 @@ class httpclient:
     FORMAT = 'utf-8'
     BUFFER_SIZE = 102400
 
-    def __init__(self, verbose, headers, url, string=None, file=None):
+    def __init__(self, verbose, headers, url, string=None, file=None, o_path=None):
         """Init required params"""
         self.parsed_url = urlparse(url)
         self.verbose = verbose
@@ -25,6 +25,8 @@ class httpclient:
         self.file = file
         # self.parsed_url.hostname
 
+        self.o_path = False;
+
     def is_json_data(self):
         if self.headers is not None and "application/json" in self.headers:
             return True
@@ -32,6 +34,10 @@ class httpclient:
 
     def to_json(self, string):
         return json.dumps(json.loads(string))
+
+    def output_to_file(self, file_path, response):
+        with open(file_path, 'w') as file_obj:
+            file_obj.write(response)
 
     def get(self):
         """ Build GET and send to host"""
@@ -51,7 +57,7 @@ class httpclient:
         print("""-----------------------GET REQUEST------------------------""")
         print(request)
         print("""-------------------------RESPONSE------------------------""")
-        self.run_client(request)
+
 
     def post(self):
         """ Build POST and send to host"""
@@ -133,5 +139,11 @@ class httpclient:
                 if Debug:
                     print("Response:\n", response, "\n")
                 print("Oops! Something went wrong ;(")
+# yun added
+            if len(self.o_path) > 0:
+                self.output_to_file(self.o_path, response)
+
+            self.run_client(request)
+
         finally:
             client.close()
