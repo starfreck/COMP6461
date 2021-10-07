@@ -12,13 +12,20 @@
 
 ```python3 httpc.py get -v -h 'Authorization:Basic YWxhZGRpbjpvcGVuc2VzYW1l' 'http://httpbin.org/get?course=networking&assignment=1'``` 
 
+#### 3. GET with output file [-o]
+
+```python3 httpc.py get -h 'Authorization:Basic YWxhZGRpbjpvcGVuc2VzYW1l' 'http://httpbin.org/get?course=networking&assignment=1' -v -o get.json``` 
+
+```python3 httpc.py get -o teapot.txt "http://httpbin.org/status/418"``` 
+
+
 ## POST Testing 
 
 #### 1. POST with inline data [--d] or [-d]
 
-```python3 httpc.py post -h Content-Type:application/js --d '{"Assignment": 1}' 'http://httpbin.org/post'``` 
+```python3 httpc.py post -h Content-Type:application/json --d '{"Assignment": 1}' 'http://httpbin.org/post'``` 
 
-```python3 httpc.py post -h Content-Type:application/js --d '{"Assignment": 1}' 'http://httpbin.org/post' -v``` 
+```python3 httpc.py post -h Content-Type:application/json --d '{"Assignment": 1}' 'http://httpbin.org/post' -v``` 
 
 #### 2. POST with File [--f] or [-f] (Enter full path of file)
 

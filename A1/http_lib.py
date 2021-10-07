@@ -1,3 +1,4 @@
+import os
 import json
 import socket
 from env import Debug
@@ -10,7 +11,7 @@ class httpclient:
     FORMAT = 'utf-8'
     BUFFER_SIZE = 102400
 
-    def __init__(self, verbose, headers, url, string=None, file=None, o_path=None):
+    def __init__(self, verbose, headers, url, string=None, file=None, output_file=None):
         """Init required params"""
         self.parsed_url = urlparse(url)
         self.verbose = verbose
@@ -23,9 +24,8 @@ class httpclient:
         # Extra Params for POST
         self.string = string
         self.file = file
+        self.output_file = output_file
         # self.parsed_url.hostname
-
-        self.o_path = False;
 
     def is_json_data(self):
         if self.headers is not None and "application/json" in self.headers:
@@ -35,9 +35,11 @@ class httpclient:
     def to_json(self, string):
         return json.dumps(json.loads(string))
 
-    def output_to_file(self, file_path, response):
-        with open(file_path, 'w') as file_obj:
-            file_obj.write(response)
+    def save_as_file(self, response):
+        if not os.path.isdir("./Downloads/"):
+            os.makedirs("./Downloads/")
+        with open("./Downloads/"+self.output_file, 'w') as file:
+            file.write(response)
 
     def get(self):
         """ Build GET and send to host"""
@@ -54,10 +56,12 @@ class httpclient:
         # Pass this data to TCP Client
 
         # Show the GET request
-        print("""-----------------------GET REQUEST------------------------""")
-        print(request)
-        print("""-------------------------RESPONSE------------------------""")
+        if Debug: print("""-----------------------GET REQUEST------------------------""")
+        if Debug: print(request)
+        if Debug: print("""-------------------------RESPONSE------------------------""")
 
+        # Pass this data to TCP Client
+        self.run_client(request)
 
     def post(self):
         """ Build POST and send to host"""
@@ -108,11 +112,9 @@ class httpclient:
             request += self.file
 
         # Show the post request
-        print("""-----------------------POST REQUEST------------------------""")
-        print(request)
-        print("""-------------------------RESPONSE------------------------""")
-        # Print Request
-        if Debug: print("Request:\n", request, "\n")
+        if Debug: print("""-----------------------POST REQUEST------------------------""")
+        if Debug: print(request)
+        if Debug: print("""-------------------------RESPONSE------------------------""")
 
         # Pass this data to TCP Client
         self.run_client(request)
@@ -135,15 +137,11 @@ class httpclient:
                 if self.verbose:
                     print(response[0].strip(), "\n")
                 print(response[1].strip())
+                if self.output_file is not None:
+                    self.save_as_file(response[1].strip())
             else:
                 if Debug:
                     print("Response:\n", response, "\n")
                 print("Oops! Something went wrong ;(")
-# yun added
-            if len(self.o_path) > 0:
-                self.output_to_file(self.o_path, response)
-
-            self.run_client(request)
-
         finally:
             client.close()
