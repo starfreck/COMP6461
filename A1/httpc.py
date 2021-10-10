@@ -3,6 +3,7 @@ import sys
 from env import Debug, Q_HTTP
 from http_lib import httpclient
 
+
 def main(argv):
     """The Entry Point of httpc"""
 
@@ -21,7 +22,7 @@ def main(argv):
 
         print(help_info)
 
-    if len(argv) == 1 and argv[0] == "info":
+    elif len(argv) == 1 and argv[0] == "info":
         info = "Develped by:\n@starfreck (https://github.com/starfreck)\n@ninanee (https://github.com/ninanee)"
         print(info)
 
@@ -152,7 +153,8 @@ def post_handler(argv):
             if Debug: print("\nverbose:", verbose, "headers:", headers, "url:", argv[0], "string:", string, "file:",
                             file, "\n")
             # Call POST Method
-            httpclient(verbose=verbose, headers=headers, url=argv[0], string=string, file=file, output_file=output_file, redirection=redirect).post()
+            httpclient(verbose=verbose, headers=headers, url=argv[0], string=string, file=file, output_file=output_file,
+                       redirection=redirect).post()
         else:
             print("Invalid choice. Please try again!")
 
@@ -164,6 +166,7 @@ def filter_args(argv):
             index = argv.index(arg)
             argv[index] = arg.replace("--", "-")
     return argv
+
 
 if __name__ == "__main__":
     sys.argv = sys.argv[1:]

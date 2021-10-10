@@ -77,7 +77,7 @@ class httpclient:
         if self.is_get:
             self.get()
         if self.is_post:
-            self.port()
+            self.post()
 
     def get(self):
         """ Build GET and send to host"""
