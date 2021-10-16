@@ -86,6 +86,6 @@ Note: You have to separate each header via comma ',' and Quote all headers toget
 
 #### 2. POST with File [--f] or [-f] (Enter full path of file)
 
-```httpc post  http://httpbin.org/post --f 'post.json'``` 
+```httpc post http://httpbin.org/post --f '/Users/yunni/Desktop/A1/COMP6461/A1/post.json'``` 
 
-```httpc post  http://httpbin.org/post --f 'post.json' -v``` 
+```httpc post http://httpbin.org/post --f '/Users/yunni/Desktop/A1/COMP6461/A1/post.json' -v``` 
