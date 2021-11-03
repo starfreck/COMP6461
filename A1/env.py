@@ -1,4 +1,4 @@
-Debug = False
+Debug = True
 
 Q_HTTP = """
                    ____         _     _   _              
