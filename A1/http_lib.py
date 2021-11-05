@@ -40,6 +40,7 @@ class httpclient:
         self.query = self.parsed_url.query
         if self.parsed_url.port is not None:
             self.port = self.parsed_url.port
+            self.host = self.host.split(":")[0]
 
     def is_json_data(self):
         if self.headers is not None and "application/json" in self.headers:

@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['httpc.py'],
-             pathex=['/Users/yunni/Desktop/A1/COMP6461/A1'],
+             pathex=['C:\\Users\\vasur\\Documents\\GitHub\\COMP6461\\A1'],
              binaries=[],
              datas=[],
              hiddenimports=[],
